@@ -1,6 +1,12 @@
 (async () => {
     // Get the current page URL
     const rawUrl = document.URL;
+    if(!rawUrl.includes("codestepbystep.com")){
+        alert("Invalid website!");
+        return;
+    }
+
+    const domain = rawUrl.split("https://")[1].split("/")[0];
 
     // Verify that we're on a CodeStepByStep problem page
     if (!rawUrl.includes("/r/problem/view/")) {
@@ -15,7 +21,7 @@
 
     try {
         // Step 1: Get the internal problem ID using the slug
-        const statusRes = await fetch(`https://www.codestepbystep.com/api/solvedstatus/get?problemid=${encodeURIComponent(problemSlug)}`, {
+        const statusRes = await fetch(`https://${domain}/api/solvedstatus/get?problemid=${encodeURIComponent(problemSlug)}`, {
             method: "GET",
             credentials: "include" // Use the existing logged-in session
         });
@@ -31,7 +37,7 @@
         if (!internalId) throw new Error("Could not resolve internal problem ID.");
 
         // Step 2: Use the internal ID to fetch the server-provided solution(s)
-        const solutionRes = await fetch(`https://www.codestepbystep.com/api/submission/check?problemid=${internalId}`, {
+        const solutionRes = await fetch(`https://${domain}/api/submission/check?problemid=${internalId}`, {
             method: "GET",
             credentials: "include"
         });
